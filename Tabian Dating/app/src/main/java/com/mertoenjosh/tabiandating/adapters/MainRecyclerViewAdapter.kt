@@ -32,27 +32,9 @@ class MainRecyclerViewAdapter(context: Context, users: ArrayList<User>) :
         return ViewHolder(view)
     }
 
-//    fun onBindViewHolder1(holder: ViewHolder, position: Int) {
-//        Log.d(TAG, "onBindViewHolder: called.")
-//        val requestOptions: RequestOptions = RequestOptions()
-//            .placeholder(R.drawable.ic_launcher_background)
-//        Glide.with(mContext)
-//            .load(mUsers[position].profile_image)
-//            .apply(requestOptions)
-//            .into(holder.image)
-//        holder.name.text = mUsers[position].name
-//        holder.interested_in.text = mUsers[position].interested_in
-//        holder.status.text = mUsers[position].status
-//        holder.cardView.setOnClickListener(object : View.OnClickListener() {
-//            fun onClick(v: View?) {
-//                Log.d(TAG, "onClick: clicked on: " + mUsers[position].name)
-//                mInterface?.inflateViewProfileFragment(mUsers[position])
-//            }
-//        })
-//    }
-
-    fun onItemClickListener(onItemClickListener: IMainActivity) {
-        mInterface = onItemClickListener
+    override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
+        super.onAttachedToRecyclerView(recyclerView)
+        mInterface = mContext as IMainActivity
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
@@ -66,12 +48,10 @@ class MainRecyclerViewAdapter(context: Context, users: ArrayList<User>) :
         holder.name.text = mUsers[position].name
         holder.interested_in.text = mUsers[position].interested_in
         holder.status.text = mUsers[position].status
-        holder.cardView.setOnClickListener( object : View.OnClickListener {
-            override fun onClick(v: View?) {
-                Log.d(TAG, "onClick: clicked on: ")
-            }
-
-        })
+        holder.cardView.setOnClickListener {
+            Log.d(TAG, "onClick: clicked on: ")
+            mInterface?.inflateViewProfileFragment(mUsers[position])
+        }
 
     }
 
