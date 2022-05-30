@@ -63,7 +63,6 @@ class MessagesRecyclerViewAdapter(
                 } else {
                     val filteredList: ArrayList<User> = ArrayList()
                     for (row in users) {
-
                         // name match condition. this might differ depending on your requirement
                         // here we are looking for name or phone number match
                         if (row.name.lowercase(Locale.getDefault())
@@ -81,13 +80,11 @@ class MessagesRecyclerViewAdapter(
 
             override fun publishResults(charSequence: CharSequence?, filterResults: FilterResults) {
                 filteredUsers = filterResults.values as ArrayList<User>
-
                 // refresh the list with filtered data
                 notifyDataSetChanged()
             }
         }
     }
-
 
     class ViewHolder(view: View): RecyclerView.ViewHolder(view) {
         var image: ImageView =  view.findViewById(R.id.image)

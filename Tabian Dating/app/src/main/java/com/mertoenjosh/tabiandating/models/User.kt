@@ -4,9 +4,9 @@ import android.os.Parcel
 import android.os.Parcelable
 
 data class User(
-    val profile_image: Int,
-    val name: String,
-    val gender: String,
+    var profile_image: Int,
+    var name: String,
+    var gender: String,
     val interested_in: String,
     val status: String,
 ) : Parcelable {

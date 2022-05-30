@@ -80,7 +80,15 @@ class MainActivity : AppCompatActivity(), IMainActivity, BottomNavigationView.On
     }
 
     override fun onMessageSelected(message: Message) {
-        TODO("Not yet implemented")
+        val fragment = ChatFragment()
+        val args = Bundle()
+        args.putParcelable(getString(R.string.intent_message), message)
+        fragment.arguments = args
+        supportFragmentManager.beginTransaction().apply {
+            replace(R.id.main_content_frame, fragment, getString(R.string.tag_fragment_chat))
+            addToBackStack(getString(R.string.tag_fragment_chat))
+            commit()
+        }
     }
 
     private fun initialize () {

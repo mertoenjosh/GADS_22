@@ -17,12 +17,12 @@
             android:id="@+id/back_arrow">
 
             <ImageView
+                android:id="@+id/image_back_arrow"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
-                android:src="@drawable/ic_back_arrow"
                 android:layout_centerVertical="true"
                 android:contentDescription="@string/image"
-                android:id="@+id/image_back_arrow"/>
+                android:src="@drawable/ic_back_arrow" />
 
         </RelativeLayout>
 
@@ -42,12 +42,12 @@
         android:layout_below="@+id/toolbar">
 
         <ImageView
+            android:id="@+id/background"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:scaleType="matrix"
             android:alpha=".1"
             android:contentDescription="@string/image"
-            android:id="@+id/background"/>
+            android:scaleType="matrix" />
 
     </RelativeLayout>
 
@@ -82,14 +82,24 @@
 
 <!--                </com.like.LikeButton>-->
 
+                <ImageView
+                    android:id="@+id/heart_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_margin="16dp"
+                    android:padding="8dp"
+                    android:src="@drawable/ic_heart_outline"
+                    android:contentDescription="Like button" />
+
                 <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/profile_image"
                     android:layout_width="150dp"
                     android:layout_height="150dp"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/ic_launcher_background"
-                    android:id="@+id/profile_image"
                     android:layout_centerInParent="true"
-                    />
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/ic_launcher_background" />
 
 
             </RelativeLayout>
@@ -134,13 +144,13 @@
                         android:layout_centerVertical="true">
 
                         <TextView
+                            android:id="@+id/text_gender"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
                             android:text="Gender: "
-                            android:id="@+id/text_gender"
-                            android:textSize="20sp"
                             android:textColor="@color/Black"
-                            android:layout_gravity="center_vertical"/>
+                            android:textSize="20sp" />
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -168,13 +178,13 @@
                         android:layout_centerVertical="true">
 
                         <TextView
+                            android:id="@+id/text_interested_in"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
                             android:text="Interested In: "
-                            android:id="@+id/text_interested_in"
-                            android:textSize="20sp"
                             android:textColor="@color/Black"
-                            android:layout_gravity="center_vertical"/>
+                            android:textSize="20sp" />
 
 
                         <TextView
@@ -214,14 +224,14 @@
 
 
                         <TextView
+                            android:id="@+id/status"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Looking"
-                            android:id="@+id/status"
-                            android:textSize="20sp"
-                            android:textColor="@color/Black"
                             android:layout_gravity="center_vertical"
-                            android:layout_toRightOf="@+id/text_status"/>
+                            android:layout_toRightOf="@+id/text_status"
+                            android:text="Looking"
+                            android:textColor="@color/Black"
+                            android:textSize="20sp" />
 
                     </RelativeLayout>
 
