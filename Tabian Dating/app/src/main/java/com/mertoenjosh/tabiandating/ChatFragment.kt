@@ -1,5 +1,6 @@
 package com.mertoenjosh.tabiandating
 
+import android.content.Context
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.util.Log
@@ -36,7 +37,7 @@ class ChatFragment : Fragment(), View.OnClickListener {
     private val mMessages: ArrayList<Message> = ArrayList()
     private var mChatRecyclerViewAdapter: ChatRecyclerViewAdapter? = null
     private var mCurrentUser: User? = null
-    private val mInterface: IMainActivity? = null
+    private var mInterface: IMainActivity? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -87,11 +88,30 @@ class ChatFragment : Fragment(), View.OnClickListener {
         return view
     }
 
-    private fun setBackgroundImage(view: View) {
-        val backgroundView: ImageView = view.findViewById(R.id.background)
-        Glide.with(requireContext())
-            .load(R.drawable.heart_background)
-            .into(backgroundView)
+    override fun onClick(view: View?) {
+        Log.d(TAG, "onClick: clicked.")
+
+        when (view?.id) {
+            R.id.back_arrow -> Log.d(TAG, "onClick: navigating back.")
+
+            R.id.post_message -> {
+                Log.d(TAG, "onClick: posting new message.")
+                mMessages.add(Message(mCurrentUser, mNewMessage.text.toString()))
+                mChatRecyclerViewAdapter!!.notifyDataSetChanged()
+                mNewMessage.setText("")
+                mRecyclerView.smoothScrollToPosition(mMessages.size - 1)
+            }
+
+            R.id.relLayoutTop -> {
+                Log.d(TAG, "onClick: navigating back.")
+                mInterface!!.inflateViewProfileFragment(mMessage!!.user!!)
+            }
+        }
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        mInterface = requireActivity() as IMainActivity
     }
 
     private fun initRecyclerView() {
@@ -101,15 +121,23 @@ class ChatFragment : Fragment(), View.OnClickListener {
         mRecyclerView.layoutManager = LinearLayoutManager(activity)
     }
 
+    private fun setBackgroundImage(view: View) {
+        val backgroundView: ImageView = view.findViewById(R.id.background)
+        Glide.with(requireContext())
+            .load(R.drawable.heart_background)
+            .into(backgroundView)
+    }
+
     private fun initToolbar() {
-        TODO("Not yet implemented")
+        Log.d(TAG, "initToolbar: initializing toolbar.");
+        mBackArrow.setOnClickListener(this)
+        mFragmentHeading.text = mMessage?.user?.name
+        Glide.with(requireContext())
+            .load(mMessage?.user?.profile_image)
+            .into(mProfileImage)
     }
 
     companion object {
         private const val TAG = "ChatFragmentTAG"
-    }
-
-    override fun onClick(v: View?) {
-        TODO("Not yet implemented")
     }
 }

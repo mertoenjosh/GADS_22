@@ -22,7 +22,7 @@ class MessagesRecyclerViewAdapter(
     private val users: ArrayList<User>,
     private var filteredUsers: ArrayList<User>,
 ) : RecyclerView.Adapter<MessagesRecyclerViewAdapter.ViewHolder>(), Filterable {
-    private val mInterface: IMainActivity? = null
+    private var mInterface: IMainActivity? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(context).inflate(R.layout.layout_messages_listitem, parent, false)
@@ -54,12 +54,17 @@ class MessagesRecyclerViewAdapter(
 
     override fun getItemCount(): Int  = filteredUsers.size
 
+    override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
+        super.onAttachedToRecyclerView(recyclerView)
+        mInterface = context as IMainActivity
+    }
+
     override fun getFilter(): Filter {
         return object : Filter() {
             override fun performFiltering(charSequence: CharSequence): FilterResults? {
                 val charString = charSequence.toString()
-                if (charString.isEmpty()) {
-                    filteredUsers = users
+                filteredUsers = if (charString.isEmpty()) {
+                    users
                 } else {
                     val filteredList: ArrayList<User> = ArrayList()
                     for (row in users) {
@@ -71,7 +76,7 @@ class MessagesRecyclerViewAdapter(
                             filteredList.add(row)
                         }
                     }
-                    filteredUsers = filteredList
+                    filteredList
                 }
                 val filterResults = FilterResults()
                 filterResults.values = filteredUsers

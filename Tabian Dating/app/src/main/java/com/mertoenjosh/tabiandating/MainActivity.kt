@@ -5,28 +5,68 @@ import android.os.Bundle
 import android.preference.PreferenceManager
 import android.util.Log
 import android.view.MenuItem
+import android.widget.ImageView
 import androidx.appcompat.app.AlertDialog
+import androidx.core.view.GravityCompat
+import androidx.drawerlayout.widget.DrawerLayout
+import com.bumptech.glide.Glide
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.navigation.NavigationView
 import com.mertoenjosh.tabiandating.models.Message
 import com.mertoenjosh.tabiandating.models.User
+import com.mertoenjosh.tabiandating.settings.SettingsFragment
 import com.mertoenjosh.tabiandating.util.Constants
 
-class MainActivity : AppCompatActivity(), IMainActivity, BottomNavigationView.OnNavigationItemSelectedListener {
+class MainActivity : AppCompatActivity(),
+    IMainActivity,
+    BottomNavigationView.OnNavigationItemSelectedListener,
+    NavigationView.OnNavigationItemSelectedListener
+{
      private lateinit var bottomNavigationViewEx: BottomNavigationView
+     private lateinit var navigationView: NavigationView
+     private lateinit var headerImage: ImageView
+     private lateinit var drawerLayout: DrawerLayout
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         bottomNavigationViewEx = findViewById(R.id.bottom_nav_view)
+        navigationView = findViewById(R.id.navigation_view)
+        val headerView = navigationView.getHeaderView(0)
+        headerImage = headerView.findViewById(R.id.header_image)
+        drawerLayout = findViewById(R.id.drawer_layout)
         Log.d(TAG, "onCreate: started")
-
         bottomNavigationViewEx.setOnNavigationItemSelectedListener(this)
         isFirstLogin()
         initBottomNavView()
         initialize()
+        setHeaderImage()
+        setNavigationViewListener()
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
+        when (item.itemId) {
+            R.id.home -> {
+                initialize()
+            }
+            R.id.settings -> {
+                Log.d(TAG, "onNavigationItemSelected: Settings Fragment")
+                val settingsFragment = SettingsFragment()
+                supportFragmentManager.beginTransaction().apply {
+                    replace(R.id.main_content_frame, settingsFragment, getString(R.string.tag_fragment_settings))
+                    addToBackStack(getString(R.string.tag_fragment_home))
+                    commit()
+                }
+            }
+            R.id.agreement -> {
+                Log.d(TAG, "onNavigationItemSelected: Home Fragment")
+                val agreementFragment = AgreementFragment()
+                supportFragmentManager.beginTransaction().apply {
+                    replace(R.id.main_content_frame, agreementFragment, getString(R.string.tag_fragment_agreement))
+                    addToBackStack(getString(R.string.tag_fragment_home))
+                    commit()
+                }
+            }
+
             R.id.bottom_nav_home -> {
                 Log.d(TAG, "onNavigationItemSelected: Home Fragment")
                 val homeFragment = HomeFragment()
@@ -35,9 +75,7 @@ class MainActivity : AppCompatActivity(), IMainActivity, BottomNavigationView.On
                     addToBackStack(getString(R.string.tag_fragment_home))
                     commit()
                 }
-
                 item.isChecked = true
-                true
             }
             R.id.bottom_nav_connections -> {
                 Log.d(TAG, "onNavigationItemSelected: Connections Fragment")
@@ -49,7 +87,6 @@ class MainActivity : AppCompatActivity(), IMainActivity, BottomNavigationView.On
                 }
 
                 item.isChecked = true
-                true
             }
             R.id.bottom_nav_messages -> {
                 Log.d(TAG, "onNavigationItemSelected: Messages Fragment")
@@ -60,10 +97,10 @@ class MainActivity : AppCompatActivity(), IMainActivity, BottomNavigationView.On
                     commit()
                 }
                 item.isChecked = true
-                true
             }
-            else -> false
         }
+        drawerLayout.closeDrawer(GravityCompat.START)
+        return false
     }
 
 
@@ -98,11 +135,21 @@ class MainActivity : AppCompatActivity(), IMainActivity, BottomNavigationView.On
             addToBackStack(getString(R.string.tag_fragment_home))
             commit()
         }
+    }
 
+    private fun setHeaderImage() {
+        Log.d(TAG, "setHeaderImage: setting header image for navigation view")
+        Glide.with(this)
+            .load(R.drawable.couple)
+            .into(headerImage)
     }
 
     private fun initBottomNavView() {
         Log.d(TAG, "initBottomNavView: initializing bottom navigation view")
+    }
+    private fun setNavigationViewListener() {
+        Log.d(TAG, "setNavigationViewListener: initializing the navigation drawer listener")
+        navigationView.setNavigationItemSelectedListener(this)
     }
 
     private fun isFirstLogin() {
