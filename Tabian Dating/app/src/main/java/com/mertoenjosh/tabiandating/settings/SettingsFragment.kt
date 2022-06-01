@@ -20,22 +20,22 @@ import de.hdodenhof.circleimageview.CircleImageView
 class SettingsFragment : Fragment(), View.OnClickListener,
     AdapterView.OnItemSelectedListener {
     //widgets
-    private lateinit var mFragmentHeading: TextView
-    private lateinit var mBackArrow: RelativeLayout
-    private lateinit var mName: EditText
-    private lateinit var mGenderSpinner: Spinner
-    private lateinit var mInterestedInSpinner: Spinner
-    private lateinit var mStatusSpinner: Spinner
-    private lateinit var mProfileImage: CircleImageView
-    private lateinit var mSave: Button
+    private lateinit var fragmentHeading: TextView
+    private lateinit var backArrow: RelativeLayout
+    private lateinit var name: EditText
+    private lateinit var genderSpinner: Spinner
+    private lateinit var interestedInSpinner: Spinner
+    private lateinit var statusSpinner: Spinner
+    private lateinit var profileImage: CircleImageView
+    private lateinit var save: Button
 
     //vars
     private var mInterface: IMainActivity? = null
-    private var mSelectedGender: String? = null
-    private var mSelectedInterest: String? = null
-    private var mSelectedStatus: String? = null
-    private var mSelectedImageUrl: String? = null
-    private val mPermissionsChecked = false
+    private var selectedGender: String? = null
+    private var selectedInterest: String? = null
+    private var selectedStatus: String? = null
+    private var selectedImageUrl: String? = null
+    private val permissionsChecked = false
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -44,16 +44,16 @@ class SettingsFragment : Fragment(), View.OnClickListener,
     ): View {
         val view: View = inflater.inflate(R.layout.fragment_settings, container, false)
         Log.d(TAG, "onCreateView: started.")
-        mBackArrow = view.findViewById(R.id.back_arrow)
-        mFragmentHeading = view.findViewById(R.id.fragment_heading)
-        mName = view.findViewById(R.id.name)
-        mGenderSpinner = view.findViewById(R.id.gender_spinner)
-        mInterestedInSpinner = view.findViewById(R.id.interested_in_spinner)
-        mStatusSpinner = view.findViewById(R.id.relationship_status_spinner)
-        mProfileImage = view.findViewById(R.id.profile_image)
-        mSave = view.findViewById(R.id.btn_save)
-        mProfileImage.setOnClickListener(this)
-        mSave.setOnClickListener(this)
+        backArrow = view.findViewById(R.id.back_arrow)
+        fragmentHeading = view.findViewById(R.id.fragment_heading)
+        name = view.findViewById(R.id.name)
+        genderSpinner = view.findViewById(R.id.gender_spinner)
+        interestedInSpinner = view.findViewById(R.id.interested_in_spinner)
+        statusSpinner = view.findViewById(R.id.relationship_status_spinner)
+        profileImage = view.findViewById(R.id.profile_image)
+        save = view.findViewById(R.id.btn_save)
+        profileImage.setOnClickListener(this)
+        save.setOnClickListener(this)
         setBackgroundImage(view)
         initToolbar()
         savedPreferences
@@ -67,21 +67,21 @@ class SettingsFragment : Fragment(), View.OnClickListener,
                     TAG,
                     "onItemSelected: selected a gender: " + adapterView.getItemAtPosition(pos) as String
                 )
-                mSelectedGender = adapterView.getItemAtPosition(pos) as String
+                selectedGender = adapterView.getItemAtPosition(pos) as String
             }
             R.id.interested_in_spinner -> {
                 Log.d(
                     TAG,
                     "onItemSelected: selected an interest: " + adapterView.getItemAtPosition(pos) as String
                 )
-                mSelectedInterest = adapterView.getItemAtPosition(pos) as String
+                selectedInterest = adapterView.getItemAtPosition(pos) as String
             }
             R.id.relationship_status_spinner -> {
                 Log.d(
                     TAG,
                     "onItemSelected: selected a status: " + adapterView.getItemAtPosition(pos) as String
                 )
-                mSelectedStatus = adapterView.getItemAtPosition(pos) as String
+                selectedStatus = adapterView.getItemAtPosition(pos) as String
             }
         }
     }
@@ -90,12 +90,11 @@ class SettingsFragment : Fragment(), View.OnClickListener,
         Log.d(TAG, "onNothingSelected: nothing is selected.")
     }
 
-
-
     override fun onClick(view: View) {
         Log.d(TAG, "onClick: clicked.")
         if (view.id == R.id.back_arrow) {
             Log.d(TAG, "onClick: navigating back.")
+            mInterface?.onBackPressed()
         }
         if (view.id == R.id.btn_save) {
             Log.d(TAG, "onClick: saving.")
@@ -113,8 +112,8 @@ class SettingsFragment : Fragment(), View.OnClickListener,
 
     private fun initToolbar() {
         Log.d(TAG, "initToolbar: initializing toolbar.")
-        mBackArrow.setOnClickListener(this)
-        mFragmentHeading.text = getString(R.string.tag_fragment_settings)
+        backArrow.setOnClickListener(this)
+        fragmentHeading.text = getString(R.string.tag_fragment_settings)
     }
 
     private fun setBackgroundImage(view: View) {
@@ -127,36 +126,36 @@ class SettingsFragment : Fragment(), View.OnClickListener,
     private fun savePreferences() {
         val preferences = PreferenceManager.getDefaultSharedPreferences(activity)
         val editor = preferences.edit()
-        val name = mName!!.text.toString()
+        val name = name!!.text.toString()
         if (name != "") {
             editor.putString(Constants.NAME, name)
             editor.apply()
         } else {
             Toast.makeText(requireActivity(), "Enter your name", Toast.LENGTH_SHORT).show()
         }
-        editor.putString(Constants.GENDER, mSelectedGender)
+        editor.putString(Constants.GENDER, selectedGender)
         editor.apply()
-        editor.putString(Constants.INTERESTED_IN, mSelectedInterest)
+        editor.putString(Constants.INTERESTED_IN, selectedInterest)
         editor.apply()
-        editor.putString(Constants.RELATIONSHIP_STATUS, mSelectedStatus)
+        editor.putString(Constants.RELATIONSHIP_STATUS, selectedStatus)
         editor.apply()
-        if (mSelectedImageUrl != "") {
-            editor.putString(Constants.PROFILE_IMAGE, mSelectedImageUrl)
+        if (selectedImageUrl != "") {
+            editor.putString(Constants.PROFILE_IMAGE, selectedImageUrl)
             editor.apply()
         }
         Toast.makeText(requireActivity(), "saved", Toast.LENGTH_SHORT).show()
         Log.d(TAG, "savePreferences: name: $name")
         Log.d(
             TAG,
-            "savePreferences: gender: $mSelectedGender"
+            "savePreferences: gender: $selectedGender"
         )
         Log.d(
             TAG,
-            "savePreferences: interested in: $mSelectedInterest"
+            "savePreferences: interested in: $selectedInterest"
         )
         Log.d(
             TAG,
-            "savePreferences: status: $mSelectedStatus"
+            "savePreferences: status: $selectedStatus"
         )
     }
 
@@ -165,60 +164,60 @@ class SettingsFragment : Fragment(), View.OnClickListener,
         get() {
             val preferences = PreferenceManager.getDefaultSharedPreferences(activity)
             val name = preferences.getString(Constants.NAME, "")
-            mName.setText(name)
-            mSelectedGender =
+            this.name.setText(name)
+            selectedGender =
                 preferences.getString(Constants.GENDER, getString(R.string.gender_none))
             val genderArray: Array<String> =
                 requireActivity().resources.getStringArray(R.array.gender_array)
             for (i in genderArray.indices) {
-                if (genderArray[i] == mSelectedGender) {
-                    mGenderSpinner.setSelection(i, false)
+                if (genderArray[i] == selectedGender) {
+                    genderSpinner.setSelection(i, false)
                 }
             }
-            mSelectedInterest = preferences.getString(
+            selectedInterest = preferences.getString(
                 Constants.INTERESTED_IN,
                 getString(R.string.interested_in_anyone)
             )
             val interestArray: Array<String> =
                 requireActivity().resources.getStringArray(R.array.interested_in_array)
             for (i in interestArray.indices) {
-                if (interestArray[i] == mSelectedInterest) {
-                    mInterestedInSpinner.setSelection(i, false)
+                if (interestArray[i] == selectedInterest) {
+                    interestedInSpinner.setSelection(i, false)
                 }
             }
-            mSelectedStatus = preferences.getString(
+            selectedStatus = preferences.getString(
                 Constants.RELATIONSHIP_STATUS,
                 getString(R.string.status_looking)
             )
             val statusArray: Array<String> =
                 requireActivity().resources.getStringArray(R.array.relationship_status_array)
             for (i in statusArray.indices) {
-                if (statusArray[i] == mSelectedStatus) {
-                    mStatusSpinner.setSelection(i, false)
+                if (statusArray[i] == selectedStatus) {
+                    statusSpinner.setSelection(i, false)
                 }
             }
-            mSelectedImageUrl = preferences.getString(Constants.PROFILE_IMAGE, "")
-            if (mSelectedImageUrl != "") {
+            selectedImageUrl = preferences.getString(Constants.PROFILE_IMAGE, "")
+            if (selectedImageUrl != "") {
                 Glide.with(this)
-                    .load(mSelectedImageUrl)
-                    .into(mProfileImage)
+                    .load(selectedImageUrl)
+                    .into(profileImage)
             }
             //
-            mGenderSpinner.onItemSelectedListener = this
-            mInterestedInSpinner.onItemSelectedListener = this
-            mStatusSpinner.onItemSelectedListener = this
+            genderSpinner.onItemSelectedListener = this
+            interestedInSpinner.onItemSelectedListener = this
+            statusSpinner.onItemSelectedListener = this
             Log.d(TAG, "getSavedPreferences: name: $name")
             Log.d(
                 TAG,
-                "getSavedPreferences: gender: $mSelectedGender"
+                "getSavedPreferences: gender: $selectedGender"
             )
             Log.d(
                 TAG,
-                "getSavedPreferences: interested in: $mSelectedInterest"
+                "getSavedPreferences: interested in: $selectedInterest"
             )
             Log.d(
                 TAG,
-                "getSavedPreferences: status: $mSelectedStatus"
+                "getSavedPreferences: status: $selectedStatus"
             )
         }
 

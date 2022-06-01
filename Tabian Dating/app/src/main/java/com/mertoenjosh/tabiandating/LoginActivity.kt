@@ -8,13 +8,13 @@ import android.view.View
 import android.widget.Button
 
 class LoginActivity : AppCompatActivity(), View.OnClickListener {
-    private lateinit var mLogin: Button
+    private lateinit var login: Button
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
         Log.d(TAG, "onCreate: starting")
-        mLogin = findViewById(R.id.btn_login)
-        mLogin.setOnClickListener(this)
+        login = findViewById(R.id.btn_login)
+        login.setOnClickListener(this)
     }
 
     override fun onClick(v: View?) {

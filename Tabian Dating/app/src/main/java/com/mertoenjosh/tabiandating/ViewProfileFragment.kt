@@ -1,7 +1,6 @@
 package com.mertoenjosh.tabiandating
 
 import android.content.Context
-import android.content.res.Resources
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.util.Log
@@ -29,12 +28,14 @@ class ViewProfileFragment : Fragment(), OnLikeListener, View.OnClickListener {
     private lateinit var status: TextView
 
     private var isLiked: Boolean= false
-    private var mUser: User?  = null
+    private var user: User?  = null
+    private var mInterface: IMainActivity? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val bundle = this.arguments
-        mUser = bundle?.getParcelable(getString(R.string.intent_user))
-        Log.d(TAG, "onCreate: got incoming user ${mUser?.name}")
+        user = bundle?.getParcelable(getString(R.string.intent_user))
+        Log.d(TAG, "onCreate: got incoming user ${user?.name}")
     }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -54,21 +55,38 @@ class ViewProfileFragment : Fragment(), OnLikeListener, View.OnClickListener {
         isLiked = ifConnected()
         setLikeImage()
         likeButton.setOnClickListener(this)
+        backArrow.setOnClickListener(this)
         setBackgroundImage(view)
         initialize()
         return view
     }
 
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        mInterface = context as IMainActivity
+    }
+
     override fun onClick(v: View?) {
-        val imageView = v as ImageView
-        isLiked = if (isLiked) {
-            unLiked(imageView)
-            false
-        } else {
-            liked(imageView)
-            true
+        Log.d(TAG, "onClick: clicked")
+        when (v) {
+            backArrow -> {
+                Log.d(TAG, "onClick: navigating back")
+                mInterface?.onBackPressed()
+            }
+
+            likeButton -> {
+                val imageView = likeButton
+                isLiked = if (isLiked) {
+                    unLiked(imageView)
+                    false
+                } else {
+                    liked(imageView)
+                    true
+                }
+                setLikeImage()
+            }
         }
-        setLikeImage()
+
     }
 
     override fun liked(likeButton: ImageView) {
@@ -77,7 +95,7 @@ class ViewProfileFragment : Fragment(), OnLikeListener, View.OnClickListener {
         val preferences = PreferenceManager.getDefaultSharedPreferences(activity)
         val editor = preferences.edit()
         val savedNames = preferences.getStringSet(Constants.SAVED_CONNECTIONS, HashSet<String>())
-        savedNames?.add(mUser?.name)
+        savedNames?.add(user?.name)
         editor.putStringSet(Constants.SAVED_CONNECTIONS, savedNames)
         editor.apply()
 
@@ -88,7 +106,7 @@ class ViewProfileFragment : Fragment(), OnLikeListener, View.OnClickListener {
         val preferences = PreferenceManager.getDefaultSharedPreferences(activity)
         val editor = preferences.edit()
         val savedNames = preferences.getStringSet(Constants.SAVED_CONNECTIONS, HashSet<String>())
-        savedNames?.remove(mUser?.name)
+        savedNames?.remove(user?.name)
         editor.apply()
 
         editor.putStringSet(Constants.SAVED_CONNECTIONS, savedNames)
@@ -107,19 +125,19 @@ class ViewProfileFragment : Fragment(), OnLikeListener, View.OnClickListener {
         val preferences = PreferenceManager.getDefaultSharedPreferences(activity)
         val savedNames = preferences.getStringSet(Constants.SAVED_CONNECTIONS, HashSet<String>())
 
-        return savedNames!!.contains(mUser?.name)
+        return savedNames!!.contains(user?.name)
     }
 
     private fun initialize() {
-        if (mUser != null) {
+        if (user != null) {
             Glide.with(requireContext())
-                .load(mUser!!.profile_image)
+                .load(user!!.profile_image)
                 .into(profileImage)
 
-            name.text = mUser!!.name
-            gender.text = mUser!!.gender
-            interestedIn.text = mUser!!.interested_in
-            status.text = mUser!!.status
+            name.text = user!!.name
+            gender.text = user!!.gender
+            interestedIn.text = user!!.interested_in
+            status.text = user!!.status
         }
     }
 

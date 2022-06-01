@@ -21,12 +21,12 @@ import com.mertoenjosh.tabiandating.util.Users
 
 class MessagesFragment: Fragment() {
     //widgets
-    private var mRecyclerViewAdapter: MessagesRecyclerViewAdapter? = null
-    private lateinit var mRecyclerView: RecyclerView
-    private lateinit var mSearchView: SearchView
+    private var recyclerViewAdapter: MessagesRecyclerViewAdapter? = null
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var searchView: SearchView
 
     //vars
-    private val mUsers: ArrayList<User>  = ArrayList()
+    private val users: ArrayList<User>  = ArrayList()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -35,8 +35,8 @@ class MessagesFragment: Fragment() {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_messages, container, false)
         Log.d(TAG, "onCreateView: started.")
-        mRecyclerView = view.findViewById(R.id.recycler_view)
-        mSearchView = view.findViewById(R.id.action_search)
+        recyclerView = view.findViewById(R.id.recycler_view)
+        searchView = view.findViewById(R.id.action_search)
 
         getConnections()
         initSearchView()
@@ -48,21 +48,21 @@ class MessagesFragment: Fragment() {
         // val searchManager: SearchManager = getActivity().getSystemService(Context.SEARCH_SERVICE);
         val searchManager: SearchManager = activity?.getSystemService(Context.SEARCH_SERVICE) as SearchManager
 
-        mSearchView.setSearchableInfo(searchManager.getSearchableInfo(activity?.componentName))
-        mSearchView.maxWidth = Integer.MAX_VALUE;
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(activity?.componentName))
+        searchView.maxWidth = Integer.MAX_VALUE;
 
 
         // listening to search query text change
-        mSearchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
             override fun onQueryTextSubmit(query: String?): Boolean {
                 // filter recycler view when query submitted
-                mRecyclerViewAdapter?.filter?.filter(query)
+                recyclerViewAdapter?.filter?.filter(query)
                 return false
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
                 // filter recycler view when text is changed
-                mRecyclerViewAdapter?.filter?.filter(newText)
+                recyclerViewAdapter?.filter?.filter(newText)
                 return false
             }
 
@@ -74,15 +74,15 @@ class MessagesFragment: Fragment() {
         val savedNames: Set<String>  =
             preferences.getStringSet(Constants.SAVED_CONNECTIONS, HashSet<String>()) as Set<String>
         val users = Users()
-        if(mUsers != null){
-            mUsers.clear()
+        if(this.users != null){
+            this.users.clear()
         }
         for(user in users.USERS){
             if(savedNames.contains(user.name)){
-                mUsers.add(user)
+                this.users.add(user)
             }
         }
-        if(mRecyclerViewAdapter == null){
+        if(recyclerViewAdapter == null){
             initRecyclerView()
         }
     }
@@ -90,9 +90,9 @@ class MessagesFragment: Fragment() {
     private fun initRecyclerView(){
         Log.d(TAG, "initRecyclerView: init recyclerview.");
 //        mRecyclerViewAdapter = MessagesRecyclerViewAdapter(requireContext(), mUsers)
-        mRecyclerViewAdapter = MessagesRecyclerViewAdapter(requireContext(), mUsers, mUsers)
-        mRecyclerView.adapter = mRecyclerViewAdapter
-        mRecyclerView.layoutManager = LinearLayoutManager(activity)
+        recyclerViewAdapter = MessagesRecyclerViewAdapter(requireContext(), users, users)
+        recyclerView.adapter = recyclerViewAdapter
+        recyclerView.layoutManager = LinearLayoutManager(activity)
     }
 
     companion object {

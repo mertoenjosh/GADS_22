@@ -16,11 +16,12 @@ import com.bumptech.glide.Glide
 class AgreementFragment : Fragment(), View.OnClickListener {
     //constants
     //widgets
-    private var mFragmentHeading: TextView? = null
-    private var mBackArrow: RelativeLayout? = null
+    private var fragmentHeading: TextView? = null
+    private var backArrow: RelativeLayout? = null
 
     //vars
     private var mInterface: IMainActivity? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
@@ -32,8 +33,8 @@ class AgreementFragment : Fragment(), View.OnClickListener {
     ): View {
         val view: View = inflater.inflate(R.layout.fragment_agreement, container, false)
         Log.d(TAG, "onCreateView: started.")
-        mBackArrow = view.findViewById(R.id.back_arrow)
-        mFragmentHeading = view.findViewById(R.id.fragment_heading)
+        backArrow = view.findViewById(R.id.back_arrow)
+        fragmentHeading = view.findViewById(R.id.fragment_heading)
         initToolbar()
         setBackgroundImage(view)
         return view
@@ -48,14 +49,15 @@ class AgreementFragment : Fragment(), View.OnClickListener {
 
     private fun initToolbar() {
         Log.d(TAG, "initToolbar: initializing toolbar.")
-        mBackArrow!!.setOnClickListener(this)
-        mFragmentHeading?.text = getString(R.string.tag_fragment_agreement)
+        backArrow!!.setOnClickListener(this)
+        fragmentHeading?.text = getString(R.string.tag_fragment_agreement)
     }
 
     override fun onClick(view: View) {
         Log.d(TAG, "onClick: clicked.")
         if (view.id == R.id.back_arrow) {
             Log.d(TAG, "onClick: navigating back.")
+            mInterface?.onBackPressed()
         }
     }
 

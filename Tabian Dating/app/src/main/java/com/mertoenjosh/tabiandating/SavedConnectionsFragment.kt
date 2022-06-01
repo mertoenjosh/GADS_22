@@ -17,11 +17,11 @@ import com.mertoenjosh.tabiandating.util.Users
 
 class SavedConnectionsFragment : Fragment() {
     //widgets
-    private var mRecyclerViewAdapter: MainRecyclerViewAdapter? = null
-    private var mRecyclerView: RecyclerView? = null
+    private var recyclerViewAdapter: MainRecyclerViewAdapter? = null
+    private var recyclerView: RecyclerView? = null
 
     //vars
-    private val mUsers: ArrayList<User> = ArrayList()
+    private val users: ArrayList<User> = ArrayList()
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -29,7 +29,7 @@ class SavedConnectionsFragment : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_saved_connections, container, false)
         Log.d(TAG, "onCreateView: started.")
-        mRecyclerView = view.findViewById(R.id.recycler_view)
+        recyclerView = view.findViewById(R.id.recycler_view)
         connections
         return view
     }
@@ -39,25 +39,25 @@ class SavedConnectionsFragment : Fragment() {
             val preferences = PreferenceManager.getDefaultSharedPreferences(activity)
             val savedNames = preferences.getStringSet(Constants.SAVED_CONNECTIONS, HashSet())
             val users = Users()
-            mUsers?.clear()
+            this.users?.clear()
 
             for (user in users.USERS) {
                 if (savedNames!!.contains(user.name))
-                    mUsers.add(user)
+                    this.users.add(user)
             }
 
-            if (mRecyclerViewAdapter == null) {
+            if (recyclerViewAdapter == null) {
                 initRecyclerView()
             }
         }
 
     private fun initRecyclerView() {
         Log.d(TAG, "initRecyclerView: init recyclerview.")
-        mRecyclerViewAdapter = MainRecyclerViewAdapter(requireContext(), mUsers)
+        recyclerViewAdapter = MainRecyclerViewAdapter(requireContext(), users)
         val staggeredGridLayoutManager =
             StaggeredGridLayoutManager(NUM_GRID_COLUMNS, LinearLayoutManager.VERTICAL)
-        mRecyclerView?.adapter = mRecyclerViewAdapter
-        mRecyclerView?.layoutManager = staggeredGridLayoutManager
+        recyclerView?.adapter = recyclerViewAdapter
+        recyclerView?.layoutManager = staggeredGridLayoutManager
     }
 
     companion object {

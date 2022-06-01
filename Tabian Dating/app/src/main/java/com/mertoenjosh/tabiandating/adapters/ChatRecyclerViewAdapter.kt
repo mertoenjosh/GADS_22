@@ -16,10 +16,10 @@ import com.mertoenjosh.tabiandating.R
 import com.mertoenjosh.tabiandating.models.Message
 
 
-class ChatRecyclerViewAdapter(private val mContext: Context, messages: ArrayList<Message>) :
+class ChatRecyclerViewAdapter(private val context: Context, messages: ArrayList<Message>) :
     RecyclerView.Adapter<ChatRecyclerViewAdapter.ViewHolder>() {
     //vars
-    private var mMessages: ArrayList<Message> = ArrayList<Message>()
+    private var messages: ArrayList<Message> = ArrayList<Message>()
     private var mInterface: IMainActivity? = null
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -32,10 +32,10 @@ class ChatRecyclerViewAdapter(private val mContext: Context, messages: ArrayList
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         Log.d(TAG, "onBindViewHolder: called.")
-        val message: Message = mMessages[position]
+        val message: Message = messages[position]
         val requestOptions: RequestOptions = RequestOptions()
             .placeholder(R.drawable.ic_launcher_background)
-        Glide.with(mContext)
+        Glide.with(context)
             .load(message.user?.profile_image)
             .apply(requestOptions)
             .into(holder.image)
@@ -44,11 +44,11 @@ class ChatRecyclerViewAdapter(private val mContext: Context, messages: ArrayList
 
     override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
         super.onAttachedToRecyclerView(recyclerView)
-        mInterface = mContext as IMainActivity
+        mInterface = context as IMainActivity
     }
 
     override fun getItemCount(): Int {
-        return mMessages.size
+        return messages.size
     }
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -66,7 +66,7 @@ class ChatRecyclerViewAdapter(private val mContext: Context, messages: ArrayList
     }
 
     init {
-        mMessages = messages
+        this.messages = messages
     }
 }
 

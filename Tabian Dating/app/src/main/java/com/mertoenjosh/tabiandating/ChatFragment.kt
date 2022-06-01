@@ -24,28 +24,28 @@ import de.hdodenhof.circleimageview.CircleImageView
 
 class ChatFragment : Fragment(), View.OnClickListener {
     //widgets
-    private lateinit var mFragmentHeading: TextView
-    private lateinit var mProfileImage: CircleImageView
-    private lateinit var mBackArrow: RelativeLayout
-    private lateinit var mNewMessage: EditText
-    private lateinit var mSendMessage: TextView
-    private lateinit var mRelativeLayoutTop: RelativeLayout
-    private lateinit var mRecyclerView: RecyclerView
+    private lateinit var fragmentHeading: TextView
+    private lateinit var profileImage: CircleImageView
+    private lateinit var backArrow: RelativeLayout
+    private lateinit var newMessage: EditText
+    private lateinit var sendMessage: TextView
+    private lateinit var relativeLayoutTop: RelativeLayout
+    private lateinit var recyclerView: RecyclerView
 
     //vars
-    private var mMessage: Message? = null
-    private val mMessages: ArrayList<Message> = ArrayList()
-    private var mChatRecyclerViewAdapter: ChatRecyclerViewAdapter? = null
-    private var mCurrentUser: User? = null
+    private var message: Message? = null
+    private val messages: ArrayList<Message> = ArrayList()
+    private var chatRecyclerViewAdapter: ChatRecyclerViewAdapter? = null
+    private var currentUser: User? = null
     private var mInterface: IMainActivity? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val bundle = this.arguments
         if (bundle != null) {
-            mMessage = bundle.getParcelable(getString(R.string.intent_message))
-            mMessages.add(mMessage!!)
-            Log.d(TAG, "onCreate: got incoming bundle: " + mMessage!!.user!!.name)
+            message = bundle.getParcelable(getString(R.string.intent_message))
+            messages.add(message!!)
+            Log.d(TAG, "onCreate: got incoming bundle: " + message!!.user!!.name)
         }
         getSavedPreferences()
     }
@@ -54,13 +54,13 @@ class ChatFragment : Fragment(), View.OnClickListener {
         val preferences = PreferenceManager.getDefaultSharedPreferences(activity)
 
         val name = preferences.getString(Constants.NAME, "")
-        mCurrentUser?.name = name!!
+        currentUser?.name = name!!
 
         val gender = preferences.getString(Constants.GENDER, getString(R.string.gender_none))
-        mCurrentUser?.gender = gender!!
+        currentUser?.gender = gender!!
 
         val profileImageImage = preferences.getString(Constants.PROFILE_IMAGE, "")
-        mCurrentUser?.profile_image = profileImageImage!!.toInt()
+        currentUser?.profile_image = profileImageImage!!.toInt()
     }
 
     override fun onCreateView(
@@ -70,16 +70,16 @@ class ChatFragment : Fragment(), View.OnClickListener {
         // Inflate the layout for this fragment
         val view: View = inflater.inflate(R.layout.fragment_chat, container, false)
         Log.d(TAG, "onCreateView: started.")
-        mBackArrow = view.findViewById(R.id.back_arrow)
-        mFragmentHeading = view.findViewById(R.id.fragment_heading)
-        mProfileImage = view.findViewById(R.id.profile_image)
-        mRecyclerView = view.findViewById(R.id.recycler_view)
-        mSendMessage = view.findViewById(R.id.post_message)
-        mNewMessage = view.findViewById(R.id.input_message)
-        mRelativeLayoutTop = view.findViewById(R.id.relLayoutTop)
+        backArrow = view.findViewById(R.id.back_arrow)
+        fragmentHeading = view.findViewById(R.id.fragment_heading)
+        profileImage = view.findViewById(R.id.profile_image)
+        recyclerView = view.findViewById(R.id.recycler_view)
+        sendMessage = view.findViewById(R.id.post_message)
+        newMessage = view.findViewById(R.id.input_message)
+        relativeLayoutTop = view.findViewById(R.id.relLayoutTop)
 
-        mSendMessage.setOnClickListener(this)
-        mRelativeLayoutTop.setOnClickListener(this)
+        sendMessage.setOnClickListener(this)
+        relativeLayoutTop.setOnClickListener(this)
 
         initToolbar()
         initRecyclerView()
@@ -92,19 +92,22 @@ class ChatFragment : Fragment(), View.OnClickListener {
         Log.d(TAG, "onClick: clicked.")
 
         when (view?.id) {
-            R.id.back_arrow -> Log.d(TAG, "onClick: navigating back.")
+            R.id.back_arrow -> {
+                Log.d(TAG, "onClick: navigating back.")
+                mInterface?.onBackPressed()
+            }
 
             R.id.post_message -> {
                 Log.d(TAG, "onClick: posting new message.")
-                mMessages.add(Message(mCurrentUser, mNewMessage.text.toString()))
-                mChatRecyclerViewAdapter!!.notifyDataSetChanged()
-                mNewMessage.setText("")
-                mRecyclerView.smoothScrollToPosition(mMessages.size - 1)
+                messages.add(Message(currentUser, newMessage.text.toString()))
+                chatRecyclerViewAdapter!!.notifyDataSetChanged()
+                newMessage.setText("")
+                recyclerView.smoothScrollToPosition(messages.size - 1)
             }
 
             R.id.relLayoutTop -> {
                 Log.d(TAG, "onClick: navigating back.")
-                mInterface!!.inflateViewProfileFragment(mMessage!!.user!!)
+                mInterface!!.inflateViewProfileFragment(message!!.user!!)
             }
         }
     }
@@ -116,9 +119,9 @@ class ChatFragment : Fragment(), View.OnClickListener {
 
     private fun initRecyclerView() {
         Log.d(TAG, "initRecyclerView: init recyclerview.")
-        mChatRecyclerViewAdapter = ChatRecyclerViewAdapter(requireContext(), mMessages)
-        mRecyclerView.adapter = mChatRecyclerViewAdapter
-        mRecyclerView.layoutManager = LinearLayoutManager(activity)
+        chatRecyclerViewAdapter = ChatRecyclerViewAdapter(requireContext(), messages)
+        recyclerView.adapter = chatRecyclerViewAdapter
+        recyclerView.layoutManager = LinearLayoutManager(activity)
     }
 
     private fun setBackgroundImage(view: View) {
@@ -130,11 +133,11 @@ class ChatFragment : Fragment(), View.OnClickListener {
 
     private fun initToolbar() {
         Log.d(TAG, "initToolbar: initializing toolbar.");
-        mBackArrow.setOnClickListener(this)
-        mFragmentHeading.text = mMessage?.user?.name
+        backArrow.setOnClickListener(this)
+        fragmentHeading.text = message?.user?.name
         Glide.with(requireContext())
-            .load(mMessage?.user?.profile_image)
-            .into(mProfileImage)
+            .load(message?.user?.profile_image)
+            .into(profileImage)
     }
 
     companion object {
