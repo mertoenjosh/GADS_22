@@ -10,15 +10,17 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.mertoenjosh.tabiandating.adapters.MainRecyclerViewAdapter
 import com.mertoenjosh.tabiandating.models.User
 import com.mertoenjosh.tabiandating.util.Constants
 import com.mertoenjosh.tabiandating.util.Users
 
-class SavedConnectionsFragment : Fragment() {
+class SavedConnectionsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     //widgets
     private var recyclerViewAdapter: MainRecyclerViewAdapter? = null
     private var recyclerView: RecyclerView? = null
+    private var connectionsSwipeRefresh: SwipeRefreshLayout? = null
 
     //vars
     private val users: ArrayList<User> = ArrayList()
@@ -30,26 +32,37 @@ class SavedConnectionsFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_saved_connections, container, false)
         Log.d(TAG, "onCreateView: started.")
         recyclerView = view.findViewById(R.id.recycler_view)
-        connections
+        connectionsSwipeRefresh = view.findViewById(R.id.connections_swipe_refresh)
+        connectionsSwipeRefresh?.setOnRefreshListener(this)
+        getConnections()
         return view
     }
 
-    private val connections: Unit
-        get() {
-            val preferences = PreferenceManager.getDefaultSharedPreferences(activity)
-            val savedNames = preferences.getStringSet(Constants.SAVED_CONNECTIONS, HashSet())
-            val users = Users()
-            this.users?.clear()
+    override fun onRefresh() {
+        getConnections()
+        onLoadComplete()
+    }
 
-            for (user in users.USERS) {
-                if (savedNames!!.contains(user.name))
-                    this.users.add(user)
-            }
+    private fun onLoadComplete() {
+        recyclerViewAdapter?.notifyDataSetChanged()
+        connectionsSwipeRefresh?.isRefreshing = false
+    }
 
-            if (recyclerViewAdapter == null) {
-                initRecyclerView()
-            }
+    private fun getConnections() {
+        val preferences = PreferenceManager.getDefaultSharedPreferences(activity)
+        val savedNames = preferences.getStringSet(Constants.SAVED_CONNECTIONS, HashSet())
+        val users = Users()
+        this.users?.clear()
+
+        for (user in users.USERS) {
+            if (savedNames!!.contains(user.name))
+                this.users.add(user)
         }
+
+        if (recyclerViewAdapter == null) {
+            initRecyclerView()
+        }
+    }
 
     private fun initRecyclerView() {
         Log.d(TAG, "initRecyclerView: init recyclerview.")
@@ -61,8 +74,8 @@ class SavedConnectionsFragment : Fragment() {
     }
 
     companion object {
-        private const val TAG = "SavedConnFragment"
 
+        private const val TAG = "SavedConnFragment"
         //constants
         private const val NUM_GRID_COLUMNS = 2
     }

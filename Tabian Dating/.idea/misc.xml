@@ -4,20 +4,29 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="../../../../../layout/custom_preview.xml" value="0.1" />
+        <entry key="app/src/main/res/drawable-v24/grey_border_bottom.xml" value="0.131" />
         <entry key="app/src/main/res/drawable-v24/ic_home.xml" value="0.131" />
         <entry key="app/src/main/res/drawable-v24/vector_heart_grey.xml" value="0.131" />
+        <entry key="app/src/main/res/drawable-v24/white_grey_border_bottom.xml" value="0.1" />
+        <entry key="app/src/main/res/drawable/ic_favorite.xml" value="0.131" />
         <entry key="app/src/main/res/drawable/ic_heart.xml" value="0.131" />
         <entry key="app/src/main/res/drawable/ic_home.xml" value="0.131" />
+        <entry key="app/src/main/res/drawable/ic_liked.xml" value="0.131" />
+        <entry key="app/src/main/res/layout/activity_choose_photo.xml" value="0.20885416666666667" />
         <entry key="app/src/main/res/layout/activity_login.xml" value="0.19791666666666666" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.15" />
         <entry key="app/src/main/res/layout/fragment_agreement.xml" value="0.20885416666666667" />
         <entry key="app/src/main/res/layout/fragment_chat.xml" value="0.20885416666666667" />
+        <entry key="app/src/main/res/layout/fragment_gallery.xml" value="0.20885416666666667" />
         <entry key="app/src/main/res/layout/fragment_home.xml" value="0.19791666666666666" />
         <entry key="app/src/main/res/layout/fragment_messages.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/fragment_photo.xml" value="0.20885416666666667" />
         <entry key="app/src/main/res/layout/fragment_saved_connections.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fragment_settings.xml" value="0.20885416666666667" />
         <entry key="app/src/main/res/layout/fragment_view_profile.xml" value="0.20885416666666667" />
         <entry key="app/src/main/res/layout/layout_chatmessage_listitem.xml" value="0.20885416666666667" />
+        <entry key="app/src/main/res/layout/layout_gallerytoolbar.xml" value="0.20885416666666667" />
+        <entry key="app/src/main/res/layout/layout_grid_imageview.xml" value="0.20885416666666667" />
         <entry key="app/src/main/res/layout/layout_main_content.xml" value="0.19791666666666666" />
         <entry key="app/src/main/res/layout/layout_main_feed.xml" value="0.19140625" />
         <entry key="app/src/main/res/layout/layout_messages_listitem.xml" value="0.20185185185185187" />

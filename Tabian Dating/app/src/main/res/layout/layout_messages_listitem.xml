@@ -24,58 +24,47 @@
         android:layout_marginTop="15dp"
         android:background="@drawable/grey_border_top" >
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="martin:"
+            android:id="@+id/name"
+            android:layout_marginStart="15dp"
+            android:textColor="@color/Black"
+            android:textSize="15sp"
+            android:textStyle="bold"/>
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:id="@+id/relLayout1"
+            android:layout_toEndOf="@+id/name"
+            android:layout_marginStart="5dp">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="martin:"
-                android:id="@+id/name"
-                android:layout_marginStart="15dp"
+                android:text="this is a message"
                 android:textColor="@color/Black"
                 android:textSize="15sp"
-                android:textStyle="bold"/>
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/relLayout1"
-                android:layout_toEndOf="@+id/name"
-                android:layout_marginStart="5dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="this is a message"
-                    android:textColor="@color/Black"
-                    android:textSize="15sp"
-                    android:id="@+id/message"
-                    android:maxHeight="40dp"/>
-
-            </RelativeLayout>
-
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Reply"
-                android:textColor="@color/DarkGrey"
-                android:textSize="13sp"
-                android:id="@+id/reply"
-                android:layout_below="@+id/relLayout1"
-                android:layout_marginTop="12dp"
-                android:layout_marginEnd="30dp"
-                android:layout_marginBottom="10dp"
-                android:layout_alignParentEnd="true"/>
+                android:id="@+id/message"
+                android:maxHeight="40dp"/>
 
         </RelativeLayout>
 
-
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Reply"
+            android:textColor="@color/DarkGrey"
+            android:textSize="13sp"
+            android:id="@+id/reply"
+            android:layout_below="@+id/relLayout1"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="30dp"
+            android:layout_marginBottom="10dp"
+            android:layout_alignParentEnd="true"/>
 
     </RelativeLayout>
-
 
 </RelativeLayout>

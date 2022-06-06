@@ -115,7 +115,7 @@ class ViewProfileFragment : Fragment(), OnLikeListener, View.OnClickListener {
 
     private fun setLikeImage() {
         if (isLiked) {
-            likeButton.setImageResource(R.drawable.ic_favorite)
+            likeButton.setImageResource(R.drawable.ic_liked)
         } else {
             likeButton.setImageResource(R.drawable.ic_heart_outline)
         }

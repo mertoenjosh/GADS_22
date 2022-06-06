@@ -1,7 +1,10 @@
 package com.mertoenjosh.tabiandating.settings
 
 
+import android.Manifest
 import android.content.Context
+import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.util.Log
@@ -9,6 +12,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.mertoenjosh.tabiandating.IMainActivity
@@ -35,7 +40,7 @@ class SettingsFragment : Fragment(), View.OnClickListener,
     private var selectedInterest: String? = null
     private var selectedStatus: String? = null
     private var selectedImageUrl: String? = null
-    private val permissionsChecked = false
+    private var permissionsChecked = false
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -56,7 +61,8 @@ class SettingsFragment : Fragment(), View.OnClickListener,
         save.setOnClickListener(this)
         setBackgroundImage(view)
         initToolbar()
-        savedPreferences
+        savedPreferences()
+        checkPermissions()
         return view
     }
     override fun onItemSelected(adapterView: AdapterView<*>, view: View, pos: Int, id: Long) {
@@ -102,12 +108,43 @@ class SettingsFragment : Fragment(), View.OnClickListener,
         }
         if (view.id == R.id.profile_image) {
             Log.d(TAG, "onClick: opening activity to choose a photo.")
+            if (permissionsChecked) {
+                startActivityForResult(Intent(requireContext(), ChoosePhotoActivity::class.java), NEW_PHOTO_REQUEST)
+            } else {
+                checkPermissions()
+            }
         }
     }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
         mInterface = activity as IMainActivity?
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        Log.d(TAG, "onActivityResult: called")
+        when (resultCode) {
+            NEW_PHOTO_REQUEST -> {
+                Log.d(TAG, "onActivityResult: received from photo request")
+                if (data != null) {
+                    if (data.hasExtra(getString(R.string.intent_new_gallery_photo))) {
+                        Glide.with(this)
+                            .load(data.getStringExtra(getString(R.string.intent_new_gallery_photo)))
+                            .into(profileImage)
+
+                        selectedImageUrl = data.getStringExtra(getString(R.string.intent_new_gallery_photo))
+                    } else if (data.hasExtra(getString(R.string.intent_new_camera_photo))) {
+                        Glide.with(this)
+                            .load(data.getStringExtra(getString(R.string.intent_new_camera_photo)))
+                            .into(profileImage)
+
+                        selectedImageUrl = data.getStringExtra(getString(R.string.intent_new_camera_photo))
+                    }
+                }
+            }
+        }
     }
 
     private fun initToolbar() {
@@ -123,10 +160,39 @@ class SettingsFragment : Fragment(), View.OnClickListener,
             .into(backgroundView)
     }
 
+    private fun checkPermissions() {
+        val cameraGranted =
+            (ContextCompat.checkSelfPermission(requireActivity(), Manifest.permission.CAMERA)
+                    == PackageManager.PERMISSION_GRANTED)
+        val storageGranted = (ContextCompat.checkSelfPermission(
+            requireActivity(),
+            Manifest.permission.WRITE_EXTERNAL_STORAGE
+        )
+                == PackageManager.PERMISSION_GRANTED)
+        var perms: Array<String?>? = null
+        if (cameraGranted) {
+            if (storageGranted) {
+                permissionsChecked = true
+            } else {
+                perms = arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+            }
+        } else {
+            perms = if (!storageGranted) {
+                arrayOf(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+            } else {
+                arrayOf(Manifest.permission.CAMERA)
+            }
+        }
+        if (perms != null) {
+            ActivityCompat.requestPermissions(requireActivity(), perms, VERIFY_PERMISSIONS_REQUEST)
+            permissionsChecked = false
+        }
+    }
+
     private fun savePreferences() {
         val preferences = PreferenceManager.getDefaultSharedPreferences(activity)
         val editor = preferences.edit()
-        val name = name!!.text.toString()
+        val name = name.text.toString()
         if (name != "") {
             editor.putString(Constants.NAME, name)
             editor.apply()
@@ -160,66 +226,65 @@ class SettingsFragment : Fragment(), View.OnClickListener,
     }
 
     //
-    private val savedPreferences: Unit
-        get() {
-            val preferences = PreferenceManager.getDefaultSharedPreferences(activity)
-            val name = preferences.getString(Constants.NAME, "")
-            this.name.setText(name)
-            selectedGender =
-                preferences.getString(Constants.GENDER, getString(R.string.gender_none))
-            val genderArray: Array<String> =
-                requireActivity().resources.getStringArray(R.array.gender_array)
-            for (i in genderArray.indices) {
-                if (genderArray[i] == selectedGender) {
-                    genderSpinner.setSelection(i, false)
-                }
+    private fun savedPreferences() {
+        val preferences = PreferenceManager.getDefaultSharedPreferences(activity)
+        val name = preferences.getString(Constants.NAME, "")
+        this.name.setText(name)
+        selectedGender =
+            preferences.getString(Constants.GENDER, getString(R.string.gender_none))
+        val genderArray: Array<String> =
+            requireActivity().resources.getStringArray(R.array.gender_array)
+        for (i in genderArray.indices) {
+            if (genderArray[i] == selectedGender) {
+                genderSpinner.setSelection(i, false)
             }
-            selectedInterest = preferences.getString(
-                Constants.INTERESTED_IN,
-                getString(R.string.interested_in_anyone)
-            )
-            val interestArray: Array<String> =
-                requireActivity().resources.getStringArray(R.array.interested_in_array)
-            for (i in interestArray.indices) {
-                if (interestArray[i] == selectedInterest) {
-                    interestedInSpinner.setSelection(i, false)
-                }
-            }
-            selectedStatus = preferences.getString(
-                Constants.RELATIONSHIP_STATUS,
-                getString(R.string.status_looking)
-            )
-            val statusArray: Array<String> =
-                requireActivity().resources.getStringArray(R.array.relationship_status_array)
-            for (i in statusArray.indices) {
-                if (statusArray[i] == selectedStatus) {
-                    statusSpinner.setSelection(i, false)
-                }
-            }
-            selectedImageUrl = preferences.getString(Constants.PROFILE_IMAGE, "")
-            if (selectedImageUrl != "") {
-                Glide.with(this)
-                    .load(selectedImageUrl)
-                    .into(profileImage)
-            }
-            //
-            genderSpinner.onItemSelectedListener = this
-            interestedInSpinner.onItemSelectedListener = this
-            statusSpinner.onItemSelectedListener = this
-            Log.d(TAG, "getSavedPreferences: name: $name")
-            Log.d(
-                TAG,
-                "getSavedPreferences: gender: $selectedGender"
-            )
-            Log.d(
-                TAG,
-                "getSavedPreferences: interested in: $selectedInterest"
-            )
-            Log.d(
-                TAG,
-                "getSavedPreferences: status: $selectedStatus"
-            )
         }
+        selectedInterest = preferences.getString(
+            Constants.INTERESTED_IN,
+            getString(R.string.interested_in_anyone)
+        )
+        val interestArray: Array<String> =
+            requireActivity().resources.getStringArray(R.array.interested_in_array)
+        for (i in interestArray.indices) {
+            if (interestArray[i] == selectedInterest) {
+                interestedInSpinner.setSelection(i, false)
+            }
+        }
+        selectedStatus = preferences.getString(
+            Constants.RELATIONSHIP_STATUS,
+            getString(R.string.status_looking)
+        )
+        val statusArray: Array<String> =
+            requireActivity().resources.getStringArray(R.array.relationship_status_array)
+        for (i in statusArray.indices) {
+            if (statusArray[i] == selectedStatus) {
+                statusSpinner.setSelection(i, false)
+            }
+        }
+        selectedImageUrl = preferences.getString(Constants.PROFILE_IMAGE, "")
+        if (selectedImageUrl != "") {
+            Glide.with(this)
+                .load(selectedImageUrl)
+                .into(profileImage)
+        }
+        //
+        genderSpinner.onItemSelectedListener = this
+        interestedInSpinner.onItemSelectedListener = this
+        statusSpinner.onItemSelectedListener = this
+        Log.d(TAG, "getSavedPreferences: name: $name")
+        Log.d(
+            TAG,
+            "getSavedPreferences: gender: $selectedGender"
+        )
+        Log.d(
+            TAG,
+            "getSavedPreferences: interested in: $selectedInterest"
+        )
+        Log.d(
+            TAG,
+            "getSavedPreferences: status: $selectedStatus"
+        )
+    }
 
     companion object {
         private const val TAG = "SettingsFragmentTAG"

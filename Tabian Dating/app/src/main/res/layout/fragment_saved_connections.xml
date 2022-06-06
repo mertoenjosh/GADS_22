@@ -5,11 +5,15 @@
     android:layout_height="match_parent"
     android:background="@color/red4">
 
-        <androidx.recyclerview.widget.RecyclerView
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/connections_swipe_refresh"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/recycler_view"
-            android:orientation="vertical" />
-
+            android:layout_height="match_parent">
+                <androidx.recyclerview.widget.RecyclerView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/recycler_view"
+                    android:orientation="vertical" />
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 </RelativeLayout>

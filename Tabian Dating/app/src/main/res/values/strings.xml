@@ -67,4 +67,6 @@
         anim id est laborum.
     </string>
     <string name="image">Image</string>
+    <string name="str_choose">Choose</string>
+    <string name="gallery">Gallery</string>
 </resources>

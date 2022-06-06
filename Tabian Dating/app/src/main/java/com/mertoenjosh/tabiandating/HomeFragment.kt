@@ -35,9 +35,13 @@ class HomeFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         return view
     }
 
+    override fun onRefresh() {
+        findMatches()
+        onLoadComplete()
+    }
+
     private fun findMatches() {
         val users = Users()
-
 
         if (matches != null)
             matches.clear()
@@ -65,11 +69,6 @@ class HomeFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     companion object {
         private const val TAG = "HomeFragmentTAG"
         private const val NUM_COLUMNS = 2
-    }
-
-    override fun onRefresh() {
-        findMatches()
-        onLoadComplete()
     }
 
     private fun onLoadComplete() {
