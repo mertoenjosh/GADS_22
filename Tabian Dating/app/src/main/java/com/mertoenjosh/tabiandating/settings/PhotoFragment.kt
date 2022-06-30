@@ -86,10 +86,11 @@ class PhotoFragment : Fragment() {
     fun bugs () {
         TODO(
             """
-                - Fix saving and deleting from shared preferences
+                - Fix saving and deleting from shared preferences.
                 - Fix gallery fragment to display images from device.
                 - Fix image capture intent.
-                - Replace deprecated methods
+                - Fully convert to kotlin.
+                - Replace deprecated methods.
                 
             """.trimIndent()
         )
