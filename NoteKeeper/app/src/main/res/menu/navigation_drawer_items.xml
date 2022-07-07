@@ -13,6 +13,12 @@
             android:id="@+id/nav_courses"
             android:icon="@drawable/ic_menu_gallery"
             android:title="Courses" />
+
+        <item
+            android:id="@+id/nav_recent"
+            android:icon="@drawable/ic_eye"
+            android:title="Recently Viewed Notes"
+            />
     </group>
 
     <item android:title="Communicate">

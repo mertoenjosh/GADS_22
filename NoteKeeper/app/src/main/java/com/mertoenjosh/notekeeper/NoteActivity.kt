@@ -2,6 +2,7 @@ package com.mertoenjosh.notekeeper
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.ArrayAdapter
@@ -12,6 +13,7 @@ class NoteActivity : AppCompatActivity() {
     private lateinit var spinnerCourses: Spinner
     private lateinit var noteTitle: TextView
     private lateinit var noteText: TextView
+    val noteGetTogetherHelper = NoteGetTogetherHelper(this, lifecycle)
     private var notePosition = POSITION_NOT_SET
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -78,6 +80,10 @@ class NoteActivity : AppCompatActivity() {
                 moveNext()
                 true
             }
+            R.id.action_get_together -> {
+                noteGetTogetherHelper.sendMessage(DataManager.loadNote(notePosition))
+                true
+            }
             else -> super.onOptionsItemSelected(item)
         }
     }
@@ -101,5 +107,9 @@ class NoteActivity : AppCompatActivity() {
         note.title = noteTitle.text.toString()
         note.text = noteText.text.toString()
         note.course = spinnerCourses.selectedItem as CourseInfo
+    }
+    
+    companion object {
+        private const val TAG = "NoteActivityTAG"
     }
 }
