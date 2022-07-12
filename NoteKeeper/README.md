@@ -17,8 +17,8 @@ Part of a series by Jim Wilson.
 - LifecyleAware components
 - Instrumented testing
 
-## Extension
-[x] Changed from `LiveData` to `StateFlow`
+## Extensions
+- [x] Changed from `LiveData` to `StateFlow`
 
 ## External Dependencies
 
