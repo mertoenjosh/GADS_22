@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="8dp"
+    tools:context=".LoginActivity">
+
+    <LinearLayout
+        android:id="@+id/llDefault"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:visibility="visible">
+        <EditText
+            android:id="@+id/username"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="username"
+            android:inputType="text"
+            android:layout_margin="8dp"
+            android:autofillHints="username"
+            tools:ignore="LabelFor" />
+
+        <EditText
+            android:id="@+id/password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="password"
+            android:inputType="textVisiblePassword"
+            android:layout_margin="8dp"
+            android:autofillHints="password"
+            tools:ignore="LabelFor" />
+
+        <Button
+            android:id="@+id/loginSend"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Login"
+            android:layout_margin="8dp"
+            android:padding="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/button" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="Try again!!"
+            android:textSize="24sp"
+            android:textColor="@android:color/holo_red_dark"
+            android:gravity="center"
+            android:layout_gravity="center_vertical"
+            android:padding="16dp"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/llSuccess"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:visibility="gone"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="Success!!"
+            android:textSize="24sp"
+            android:textColor="@android:color/holo_green_dark"
+            android:gravity="center"
+            android:layout_gravity="center_vertical"
+            android:padding="16dp"/>
+
+    </LinearLayout>
+
+</LinearLayout>
