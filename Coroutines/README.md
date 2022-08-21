@@ -17,7 +17,7 @@ A simple app that implements kotlin coroutines in android.
 - LifecyleAware components
 
 ## Extension
-[x] Changed from `LiveData` to `StateFlow`
+- [x] Changed from `LiveData` to `StateFlow`
 
 ## External Dependencies
 
